@@ -18,41 +18,9 @@ function syncReadFile(filename: string) {
   
   return card_data_splitted;
 }
-// function filename()  {
-//   const prompts = require('prompts');
-
-//   (async () => {
-//     const response = await prompts({
-//       type: 'text',
-//       name: 'value',
-//       message: 'Enter Filename: ',
-      
-//     });
-//   var filename = response
-//   console.log(filename['value']); // => { value: 24 }
-  
-//   return response['value']
-//   })();
-  // const rl = readline.createInterface({ 
-  //     input: stdin, 
-  //     output: stdout,
-  //   });
-    
-  //   const answer = rl.question('Enter filename: ', (answer) => {
-  //     console.log(`opening file: ${answer}`);
-      
-  //     console.log('-----------------------------',answer)
-  //     rl.close();
-  //     return answer
-      
-    // });
-  // console.log(test)
-// }
-
 
 async function populate_data() {
    
-
     console.log(process.argv)
     console.log(process.argv[2])
     console.log('----')
@@ -62,18 +30,21 @@ async function populate_data() {
     console.log(files)
     var card_data_splitted = syncReadFile(file+'/bn_1895939.csv')
     console.log(card_data_splitted)
+    
+    //Extract data from array
     for (let card of card_data_splitted) {
+      // filter out blanks
       if (card == '')
-      
         continue
 
       var card_list = card.split(',')
-
+      
       if (card_list[5])
         var check = 0
       else
         continue
       
+      //Extract data from string
       var datetime = card_list[0]
       var date = datetime.slice(17,26)
       var time = datetime.slice(35,-2)
@@ -84,6 +55,7 @@ async function populate_data() {
       var image = card_list[5]
       var img = image.slice(12,-4)
 
+      //log everything 
       console.log('title',title)
       console.log('price',price)
       console.log('page',page)
@@ -92,6 +64,7 @@ async function populate_data() {
       console.log('id',id)
       console.log('image',img)
       console.log('')
+      // add card to database 
       const car1 = await prisma.card.createMany({
         data: {
           id: id,
@@ -108,32 +81,8 @@ async function populate_data() {
       })
       console.dir(car1, {depth: null})
     }
-
-    // "Time": ["Date:  7/14/2022  Time:  10:59"], "Id": "155057290171", "Price": "2.95", "page": ["bn_1889619"], "Title": ["Pokemon GO Niantic App Codes x 6"], "Image": ["https://i.ebayimg.com/thumbs/images/g/c64AAOSwCD1ivPSl/s-l300.jpg"]}
-    // put this in a for loop and export each card in the array
-  
-    
-  
-    // const allUsers = await prisma.user.findMany({
-    //   include: {
-    //     posts: true,
-    //     profile: true,
-    //   },
-    // })
-    // console.dir(allUsers, { depth: null })
 }
-// async function main() {
-//     const post = await prisma.post.update({
-//       where: { id: 2 },
-//       data: { published: true },
-//     })
-//     console.log(post)
-    
-//   }  
 
-
-// var answer = filename()
-// console.log(answer)
 populate_data()
   .catch((e) => {
     throw e
