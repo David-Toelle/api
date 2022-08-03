@@ -36,7 +36,4 @@ export class CardsService {
         }    
 
 
-        // async queryBuilder(alias: string) {
-        //     return this.prismaService.
-        // }
 }
